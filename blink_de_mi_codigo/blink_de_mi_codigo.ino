@@ -13,9 +13,10 @@ const char *mqtt_server = "node02.myqtthub.com";
 const int mqtt_port = 1883;
 const char *mqtt_user = "esp12E";
 const char *mqtt_pass = "esp32";
-const char *root_topic_subscribe = "Temperatura/esp32";
-const char *root_topic_publish = "Temperatura/public_esp32";
-
+const char *root_topic_subscribe = "Sensor_Raiz/Temperatura";
+const char *root_topic_subscribe2 = "Sensor_Raiz/Humedad";
+const char *root_topic_publish = "Temperatura/esp32";
+const char *root_topic_publish2 = "Humedad/esp32";
 
 //***************************************
 //***** DECLARAMOS VARIABLES (correo)****
@@ -87,10 +88,12 @@ void setup()
 
 void loop() 
 {
-  // Corremos sistema de temperatura
+  // Corremos sistema de sensor 
   float temp = sistemaTemperatura();
+  float humd = sistemaHumedad();
 
   if(temp == -1.0 ){return;}
+  if(humd == -1.0 ){return;}
   
   // -----------------------------
 
@@ -113,12 +116,18 @@ void loop()
 
   if (client.connected())
   {
-    String str = "Publicando Topic: " + String(temp);
+    String str = "Topic Temp en °C: " + String(temp);
     str.toCharArray(msg,25);
     client.publish(root_topic_publish,msg);
     Serial.println();
     Serial.println(msg);
-    delay(5000);
+    
+    String str = "Topic Humedad en %: " + String(humd);
+    str.toCharArray(msg,25);
+    client.publish(root_topic_publish,msg);
+    Serial.println();
+    Serial.println(msg);
+    delay(15000);
   }
   client.loop();
 }
@@ -212,6 +221,10 @@ void callback(char* topic, byte* payload, unsigned int length)
 float sistemaTemperatura(){
     // Esperamos 1 min entre medidas
   delay(1000);
+
+  float sistemaHumedad(){
+    // Esperamos 1 min entre medidas
+  delay(1000);
  
   // Leemos la humedad relativa
   float h = dht.readHumidity();
@@ -240,24 +253,26 @@ float sistemaTemperatura(){
   Serial.print(" °C ");
   Serial.println();
   return t;
+  return h;
 }
 
 void sistemaVentilacion(float temperatura){
-  if(temperatura < 27){
+  if(temperatura <= 27){
       digitalWrite(bombilla,HIGH);
       digitalWrite(ventilador,LOW);
       Serial.println();
       Serial.println("TEMP BAJA");
       return;
     }
-  if(temperatura >= 29){
     
+   if(temperatura >= 27){
       digitalWrite(bombilla,LOW);
       digitalWrite(ventilador,HIGH);
       Serial.println();
     Serial.println("TEMP ALTA");
     return;
   }
+   
 }
 
 
@@ -273,6 +288,7 @@ void sistemaVentilacion(float temperatura){
 
 
 void correo(){
+
 digitalWrite(22, HIGH);
 
 //Configuración del servidor de correo electrónico SMTP, host, puerto, cuenta y contraseña
@@ -288,7 +304,7 @@ datosSMTP.setPriority("High");
 datosSMTP.setSubject("Envio evidencias Laboratorio 3, terminado.");
 
 // Establece el mensaje de correo electrónico en formato de texto (sin formato)
-datosSMTP.setMessage("Hola somos el grupo de Johan, Harold & Eliana y nos estamos reportando", false);
+datosSMTP.setMessage("Hola, somos el grupo de Johan, Harold & Eliana y nos estamos reportando, la puerta se abre.", false);
 
 // Agregar destinatarios, se puede agregar más de un destinatario
 datosSMTP.addRecipient("haroldbarrera@unisangil.edu.co");
