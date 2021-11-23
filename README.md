@@ -20,7 +20,7 @@ Estas son las librerias usadas, abajo se encontraran sus respectivos enlaces y  
 
 
 
-Link de conexion para obtener la informacion.
+>Link de conexion para obtener la informacion.<
 
 https://randomnerdtutorials.com/esp32-firebase-realtime-database/
 
@@ -34,12 +34,11 @@ https://www.youtube.com/watch?v=n5myYXjJh2E&ab_channel=jadsatv
 
 
 
-Librerias para  realizar  el desarrollo del codigo
+>  Librerias para  realizar  el desarrollo del codigo  <
 
 [CodigoImagenes_27_05_2020.zip](https://github.com/JohCen12/IoT/files/7585894/CodigoImagenes_27_05_2020.zip)
 
 [LibreriasCodigo_21_05_2020.zip](https://github.com/JohCen12/IoT/files/7585897/LibreriasCodigo_21_05_2020.zip)
-
 
 [Firebase_ESP8266_Client-2.8.9.zip](https://github.com/JohCen12/IoT/files/7585898/Firebase_ESP8266_Client-2.8.9.zip)
 
