@@ -4,6 +4,13 @@
 #include "DHT.h"
 #include "ESP32_MailClient.h"
 
+/** THING SPEAKER _ GRAPH **/
+#include "ThingSpeak.h"
+#define pindht 4
+DHT dht1(pindht, DHT11);
+unsigned long channelID = 1576455;                //ID de vuestro canal.
+const char* WriteAPIKey = "KD9B7AXALG43J9E0";     //Write API Key de vuestro canal.
+
 //***************************************
 //*** Firebase - Injection nodemcu ******
 //***************************************
@@ -108,6 +115,9 @@ void setup()
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
 
+  /** -------- Configuramos ThingSpeak -------- **/
+  ThingSpeak.begin(espClient);
+
   
   /**----------- Configuramos Firebase --------**/
 
@@ -151,6 +161,8 @@ void loop()
   String data = sistemaTemperatura();
   if(data == "err,err,err" ){return;}
   
+  /*** Conexion CLiente Thing Speaker ----- **/
+  ThingSpeak.writeFields(channelID,WriteAPIKey);
 
   //******** split data *******//
   float temp = getValue(data,',',0).toFloat();
@@ -167,7 +179,15 @@ void loop()
     publish_db(temp,humd,1,flag_venti,0,flag_bombilla);
     delay(500);
   /*** END - PUBLICAR DATOS EN FIREBASE **/
-  
+
+
+  /** Enviamos datos a thingspeaker **/
+  ThingSpeak.setField(1,temp);
+  ThingSpeak.setField(2,humd);
+  ThingSpeak.setField(3,door);
+  ThingSpeak.setField(4,flag_venti);
+  ThingSpeak.setField(5,flag_bombilla);
+
 
   // -----------------------------
 
