@@ -6,8 +6,6 @@
 
 /** THING SPEAKER _ GRAPH **/
 #include "ThingSpeak.h"
-#define pindht 4
-DHT dht1(pindht, DHT11);
 unsigned long channelID = 1576455;                //ID de vuestro canal.
 const char* WriteAPIKey = "KD9B7AXALG43J9E0";     //Write API Key de vuestro canal.
 
